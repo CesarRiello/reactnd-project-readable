@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
-import './App.css';
-//import Initial from './components/Initial';
-//import Nav from './components/Nav';
+import React from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-class App extends Component {
-  render() {
-    return [
-      <nav key="nav"/>,
-      <main role="main" className="App" key="main">
-        {/* <Initial /> */}
-        <div className="container">
+import { NewPost, Posts, Post } from './containers/'
 
-        </div>
-      </main>
-    ];
-  }
-}
+import { Provider } from 'react-redux'
+import store from 'store'
 
-export default App;
+const App = () => (
+  <Provider store={store}>
+    <BrowserRouter key="router">
+      <Switch>
+        <Route exact path="/" component={Posts} />
+        <Route exact path="/post/new" component={NewPost} />
+        <Route exact path="/post/edit/:id" component={NewPost} />
+        <Route exact path="/post/:id" component={Post} />
+        <Route exact path="/:category/:id" component={Post} />
+        <Route exact path="/:category" component={Posts} />
+      </Switch>
+    </BrowserRouter>
+  </Provider>
+)
+
+export default App

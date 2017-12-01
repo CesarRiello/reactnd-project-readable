@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import { commentsActions } from '../actions'
 import { connect } from 'react-redux'
-import { Button, Comment, Form, Header, Icon } from 'semantic-ui-react'
 
 class Comments extends Component {
   constructor(props) {
@@ -47,58 +45,58 @@ class Comments extends Component {
     const { items, parentId } = this.props
     const comments = (items || []).filter(comment => !comment.deleted && !comment.parentDeleted)
     return (
-      <Comment.Group>
-        <Header as='h3' dividing>Comments</Header>
+      <div>
+        <header as='h3' dividing>Comments</header>
         {!comments.length && <p>Be the first to comment ;)</p>}
         {comments.map((comment) => (
-          this.state.edit.id !== comment.id &&
-          (<Comment key={comment.id}>
-            <Comment.Content>
-              <Comment.Author>
-                <Icon name="user" /> {comment.author}
-              </Comment.Author>
-              <Comment.Metadata>
-                <div><Icon name={'like outline'} /> {comment.voteScore} Likes</div>
-                <div>{moment(comment.timestamp).calendar()}</div>
-              </Comment.Metadata>
-              <Comment.Text>{comment.body}</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><Icon name={'like outline'} />Like</Comment.Action>
-                <Comment.Action onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><Icon name={'dislike outline'} />Dislike</Comment.Action>
-                <Comment.Action onClick={() => { this.editComment(comment) }}><Icon name={'edit outline'} />Edit</Comment.Action>
-                <Comment.Action onClick={() => { this.props.deleteComment({ id: comment.id }) }}><Icon name={'trash outline'} />Delete</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>) || (
-            <Comment key={comment.id}>
-              <Comment.Content>
-                <Comment.Author>
-                  <Icon name="user" /> {comment.author}
-                </Comment.Author>
-                <Comment.Metadata>
-                  <div><Icon name={'like outline'} /> {comment.voteScore} Likes</div>
-                  <div>{moment(comment.timestamp).calendar()}</div>
-                </Comment.Metadata>
-                <Form reply onSubmit={() => { this.handleEditComment(this.state.edit) }}>
-                  <Form.TextArea required label="Comment" value={this.state.edit.body} onChange={(e) => { this.handleChange('edit', e.target.value) }} />
-                  <Button content='Save Comment' labelPosition='left' icon='edit' primary />
-                </Form>
-                <Comment.Actions>
-                  <Comment.Action onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><Icon name={'like outline'} />Like</Comment.Action>
-                  <Comment.Action onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><Icon name={'dislike outline'} />Dislike</Comment.Action>
-                  <Comment.Action onClick={() => { this.editComment(comment) }}><Icon name={'edit outline'} />Edit</Comment.Action>
-                  <Comment.Action onClick={() => { this.props.deleteComment({ id: comment.id }) }}><Icon name={'trash outline'} />Delete</Comment.Action>
-                </Comment.Actions>
-              </Comment.Content>
-            </Comment>)
+          this.state.edit.id !== comment.id ?
+          (<main key={comment.id}>
+            <div>
+              <p>
+                <i name="user" /> {comment.author}
+              </p>
+              <div>
+                <div><i name={'like outline'} /> {comment.voteScore} Likes</div>
+                <div>{new Date(comment.timestamp)}</div>
+              </div>
+              <article>{comment.body}</article>
+              <div>
+                <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><i name={'like outline'} />Like</button>
+                <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><i name={'dislike outline'} />Dislike</button>
+                <button onClick={() => { this.editComment(comment) }}><i name={'edit outline'} />Edit</button>
+                <button onClick={() => { this.props.deleteComment({ id: comment.id }) }}><i name={'trash outline'} />Delete</button>
+              </div>
+            </div>
+          </main>) : (
+            <main key={comment.id}>
+              <div>
+                <p>
+                  <i name="user" /> {comment.author}
+                </p>
+                <div>
+                  <div><i name={'like outline'} /> {comment.voteScore} Likes</div>
+                  <div>{new Date(comment.timestamp)}</div>
+                </div>
+                <form reply onSubmit={() => { this.handleEditComment(this.state.edit) }}>
+                  <textarea required label="Comment" value={this.state.edit.body} onChange={(e) => { this.handleChange('edit', e.target.value) }} />
+                  <button content='Save Comment' labelPosition='left' icon='edit' primary />
+                </form>
+                <div>
+                  <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><i name={'like outline'} />Like</button>
+                  <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><i name={'dislike outline'} />Dislike</button>
+                  <button onClick={() => { this.editComment(comment) }}><i name={'edit outline'} />Edit</button>
+                  <button onClick={() => { this.props.deleteComment({ id: comment.id }) }}><i name={'trash outline'} />Delete</button>
+                </div>
+              </div>
+            </main>)
         ))}
 
-        <Form reply onSubmit={() => { this.handleSubmit(parentId) }}>
-          <Form.Input required label='Name' type='text' value={this.state.form.author} onChange={(e) => { this.handleChange('author', e.target.value) }} />
-          <Form.TextArea required label="Comment" value={this.state.form.body} onChange={(e) => { this.handleChange('body', e.target.value) }} />
-          <Button content='Add Comment' labelPosition='left' icon='edit' primary />
-        </Form>
-      </Comment.Group>
+        <form reply onSubmit={() => { this.handleSubmit(parentId) }}>
+          <input required label='Name' type='text' value={this.state.form.author} onChange={(e) => { this.handleChange('author', e.target.value) }} />
+          <textarea required label="Comment" value={this.state.form.body} onChange={(e) => { this.handleChange('body', e.target.value) }} />
+          <button content='Add Comment' labelPosition='left' icon='edit' primary />
+        </form>
+      </div>
     )
   }
 }

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import { commentsActions } from '../actions'
 import { connect } from 'react-redux'
-import { Button, Comment, Form, Header, Icon } from 'semantic-ui-react'
 
 class Comments extends Component {
   constructor(props) {

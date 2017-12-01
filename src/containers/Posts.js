@@ -4,6 +4,8 @@ import PostGrid from '../components/PostGrid'
 import { postsActions, categoriesActions } from '../actions'
 import { Link } from 'react-router-dom'
 
+import Header from 'components/Header'
+
 class Posts extends Component {
   state = {
     postsOrderBy: '-voteScore',
@@ -54,10 +56,9 @@ class Posts extends Component {
 
   render() {
     const { name } = this.props.match.params
-    return (
-
-      <div className="container">
-
+    return [
+      <Header key="header" />,
+      <div className="container" key="container">
         <div className="row">
           <div className="col-md-12">
             <div className="btn-group" role="group" aria-label="...">
@@ -105,7 +106,7 @@ class Posts extends Component {
           posts={this.props.posts}
           postsOrderBy={this.state.postsOrderBy} />
       </div>
-    )
+    ]
   }
 }
 

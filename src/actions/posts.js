@@ -6,7 +6,7 @@ import {
   postPost,
   postVote,
   deletePost
-} from "../utils/Rest"
+} from "utils/api"
 
 export const FETCH_POSTS = "FETCH_POSTS"
 export const ADD_POST = "ADD_POST"

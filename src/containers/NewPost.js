@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { postsActions, categoriesActions } from "../actions"
+import Header from 'components/Header'
 
 const initialPost = {
   id: null,
@@ -84,7 +85,8 @@ class NewPost extends Component {
   }
 
   render() {
-    return (
+    return [
+      <Header key="header" />,
       <div className="container">
         <form key="form-new-post" onSubmit={this.handleSubmit}>
 
@@ -163,7 +165,7 @@ class NewPost extends Component {
           </button>
         </form>
       </div>
-    )
+    ]
   }
 }
 

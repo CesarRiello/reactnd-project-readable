@@ -1,0 +1,12 @@
+.readable {
+  background: #f6f6f6;
+}
+
+.readable .row {
+  margin-bottom: 20px;
+}
+
+input:checked ~ .collapse,
+input:checked ~ .dropdown-menu {
+  display: block;
+}

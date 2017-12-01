@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getCategories } from '../utils/Rest'
+import { getCategories } from 'utils/api'
 class Header extends Component {
   state = {
     categories: []

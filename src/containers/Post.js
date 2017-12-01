@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import moment from 'moment'
-import { Container, Button, Icon, Label } from 'semantic-ui-react'
-import Comments from '../components/Comments'
-import { postsActions, commentsActions } from '../actions'
+import Comments from 'components/Comments'
+import { postsActions, commentsActions } from 'actions'
 import { Link } from 'react-router-dom'
+
+import Header from 'components/Header'
 
 class Post extends Component {
   componentDidMount() {
@@ -22,9 +22,9 @@ class Post extends Component {
   }
   render() {
     const { title, body, author, category, timestamp, voteScore, comments, id } = this.props.post
-    const date = moment(timestamp).calendar()
+    const date = new Date(timestamp)
     return [
-
+      <Header key="header" />,
       <div className="container" key="post">
 
         <div className="blog-header">
@@ -47,22 +47,22 @@ class Post extends Component {
               {!!body && (<p className="post">{body}</p>)}
               <hr />
 
-              <Button.Group basic size='mini'>
-                <Button icon={'like outline'} content={'Like'} onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}></Button>
-                <Button label={<Label>{voteScore}</Label>} onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} icon={'dislike outline'} content={'dislike'}></Button>
-              </Button.Group>
-              <Button.Group basic size='mini'>
-                {<Button as={Link} to={`/post/${id}`}><Icon name={'edit outline'} />Edit</Button>}
-                <Button onClick={() => { this.props.deletePost({ postId: id, category: this.props.match.params.category }) }}><Icon name={'trash outline'} />Delete</Button>
-              </Button.Group>
+              <div basic size='mini'>
+                <button icon={'like outline'} content={'Like'} onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}></button>
+                <button label={<label>{voteScore}</label>} onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} icon={'dislike outline'} content={'dislike'}></button>
+              </div>
+              <div basic size='mini'>
+                {<button as={Link} to={`/post/${id}`}><i name={'edit outline'} />Edit</button>}
+                <button onClick={() => { this.props.deletePost({ postId: id, category: this.props.match.params.category }) }}><i name={'trash outline'} />Delete</button>
+              </div>
             </div>
           </div>
         </div>
     </div>,
 
-      <Container key="comments">
-        <Comments items={comments} parentId={id} />
-      </Container>
+    <div className="container" key="comments">
+      <Comments items={comments} parentId={id} />
+    </div>
     ]
   }
 }

@@ -1,4 +1,4 @@
-import { getCategories } from '../utils/Rest'
+import { getCategories } from 'utils/api'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 
 export const fetchCategories = () => {

@@ -1,12 +1,10 @@
 import React from 'react'
-import sortBy from 'sort-by'
 import { connect } from 'react-redux'
 import { postsActions } from '../actions'
 import { Link } from 'react-router-dom'
-import moment from 'moment'
 
 const orderPosts = (posts, orderBy) =>
-  [...posts].sort(sortBy(orderBy))
+  [...posts].sort(() => (orderBy))
 
 const filterPosts = posts =>
   (posts || []).filter(post => !post.deleted)
@@ -14,7 +12,7 @@ const filterPosts = posts =>
 const preparePosts = (posts, orderBy) => (
   orderPosts(filterPosts(posts), orderBy).map(post =>
     ({...post,
-      date: moment(post.timestamp).calendar(),
+      date: new Date(post.timestamp),
       link:`/${post.category}/${post.id}` }))
 )
 

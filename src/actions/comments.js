@@ -1,6 +1,11 @@
-import * as API from '../API'
-import sortBy from 'sort-by'
-import uuidv1 from 'uuid/v1'
+import {
+  getComments,
+  postComment,
+  putComment,
+  postVoteComment,
+  deleteComment
+} from 'utils/api'
+
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 export const FETCH_COMMENTS = 'FETCH_COMMENTS'
@@ -9,7 +14,7 @@ export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 export const editComment = (comment) => {
   return dispatch => {
-    API.editComment(comment).then(response => {
+    putComment(comment).then(response => {
       dispatch({ type: EDIT_COMMENT, comment: response.data })
     })
   }
@@ -18,8 +23,8 @@ export const editComment = (comment) => {
 export const fetchComments = postId => {
   if (postId) {
     return dispatch => {
-      API.getComments(postId).then(response => {
-        dispatch({ type: FETCH_COMMENTS, comments: (response.data || []).sort(sortBy('-voteScore')) })
+      getComments(postId).then(response => {
+        dispatch({ type: FETCH_COMMENTS, comments: (response.data || []).sort(() => ('-voteScore')) })
       })
     }
   }
@@ -27,7 +32,7 @@ export const fetchComments = postId => {
 
 export const addComment = data => {
   return dispatch => {
-    API.addComment(data).then(response => {
+    postComment(data).then(response => {
       dispatch({ type: ADD_COMMENT, comment: response.data })
     })
   }
@@ -35,17 +40,15 @@ export const addComment = data => {
 
 export const voteComment = ({ id, vote }) => {
   return dispatch => {
-    API.voteComment({ id, vote }).then(response => {
+    postVoteComment({ id, vote }).then(response => {
       dispatch({ type: VOTE_COMMENT, comment: response.data })
     })
   }
 }
 
-
-
-export const deleteComment = ({ id }) => {
+export const _deleteComment = ({ id }) => {
   return dispatch => {
-    API.deleteComment({ id }).then(response => {
+    deleteComment({ id }).then(response => {
       dispatch({ type: DELETE_COMMENT, comment: response.data })
     })
   }
