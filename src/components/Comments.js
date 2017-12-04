@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { commentsActions } from '../actions'
 import { connect } from 'react-redux'
+import { timestampToDate } from 'utils/date'
 
 class Comments extends Component {
   constructor(props) {
@@ -57,22 +58,30 @@ class Comments extends Component {
           {comment.author}
           <span className="pull-right">
             Rank: ({comment.voteScore}) {' '}
-            Date: {comment.timestamp}
+            Date: {timestampToDate(comment.timestamp)}
           </span>
         </div>
         <div class="panel-body">
           {comment.body}
         </div>
         <div class="panel-footer">
-          <button className="btn-link" onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><i name={'like outline'} />Like</button>
-          <button className="btn-link" onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><i name={'dislike outline'} />Dislike</button>
-          <button className="btn-link" onClick={() => { this.editComment(comment) }}><i name={'edit outline'} />Edit</button>
-          <button className="btn-link" onClick={() => { this.props.deleteComment({ id: comment.id }) }}><i name={'trash outline'} />Delete</button>
+          <button className="btn-link" onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}>
+            👍
+          </button>
+          <button className="btn-link" onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}>
+            👎
+          </button>
+          <button className="btn-link" onClick={() => { this.putComment(comment) }}>
+            ✍
+          </button>
+          <button className="btn-link" onClick={() => { this.props.deleteComment({ id: comment.id }) }}>
+            🗑
+          </button>
         </div>
       </div>
   )
 
-  renderEditComment = (comment) => (
+  renderCommentForm = (comment) => (
     <main key={comment.id}>
       <div>
         <p>
@@ -96,7 +105,7 @@ class Comments extends Component {
     </main>
   )
 
-  renderForm = (parentId) => (
+  renderNewCommentForm = (parentId) => (
     <form reply onSubmit={() => { this.handleSubmit(parentId) }}>
       <input required label='Name' type='text' value={this.state.form.author} onChange={(e) => { this.handleChange('author', e.target.value) }} />
       <textarea required label="Comment" value={this.state.form.body} onChange={(e) => { this.handleChange('body', e.target.value) }} />
@@ -105,12 +114,17 @@ class Comments extends Component {
   )
 
   render() {
-    const { items, parentId } = this.props
+    const { items, postId, commentId } = this.props
     const comments = this.prepareComments(items)
     return (
       <div className="row">
         <h4>Comments</h4>
-        {comments.map(comment => this.renderComment(comment))}
+        {comments.map(comment => {
+          if (commentId === comment.id) {
+            return this.renderCommentForm(comment)
+          }
+          return this.renderComment(comment)
+        })}
       </div>
     )
   }

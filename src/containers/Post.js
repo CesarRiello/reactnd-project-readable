@@ -29,7 +29,7 @@ class Post extends Component {
       timestamp,
       voteScore
     } = this.props.post
-  
+
     return [
       <Header key="header" categories={this.props.categories} />,
       <div className="container" key="post">
@@ -48,7 +48,6 @@ class Post extends Component {
                 Date: {timestampToDate(timestamp)} -
                 Category: <span className="badge"> {category} </span>
               </p>
-
 
               {!!body && (<p className="post">{body}</p>)}
               <hr />
