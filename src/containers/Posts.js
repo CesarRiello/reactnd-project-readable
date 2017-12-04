@@ -18,7 +18,7 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+    this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
     this.props.dispatch(categoriesActions.fetchCategories())
   }
 
@@ -57,7 +57,7 @@ class Posts extends Component {
   render() {
     const { name } = this.props.match.params
     return [
-      <Header key="header" />,
+      <Header key="header" categories={this.props.categories} />,
       <div className="container" key="container">
         <div className="row">
           <div className="col-md-12">
@@ -90,7 +90,11 @@ class Posts extends Component {
                 <ul className="dropdown-menu">
                   {(this.props.categories || [])
                     .map(category =>
-                       <pre>{JSON.stringify(category)}</pre>
+                      <li key={category.path}>
+                        <a href={`/${category.path}`} className="btn-link" alt={`/${category.name}`}>
+                          {category.name}
+                        </a>
+                    </li>
                   )}
                 </ul>
               </div>
@@ -99,8 +103,6 @@ class Posts extends Component {
             </div>
           </div>
         </div>
-
-        <pre>{JSON.stringify(this.props, 2, ' ' )}</pre>
 
         <PostGrid
           posts={this.props.posts}
@@ -114,7 +116,7 @@ const mapStateToProps = state => {
   console.log('state', state);
   return {
     categories: state.categories,
-    // posts: state.posts,
+    posts: state.posts,
     notification: state.notification
   }
 }

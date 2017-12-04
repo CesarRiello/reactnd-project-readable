@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { postsActions } from '../actions'
 import { Link } from 'react-router-dom'
+import { timestampToDate } from 'utils/date'
 
 const orderPosts = (posts, orderBy) =>
   [...posts].sort(() => (orderBy))
@@ -10,12 +11,12 @@ const filterPosts = posts =>
   (posts || []).filter(post => !post.deleted)
 
 const preparePosts = (posts, orderBy) => (
-  orderPosts(filterPosts(posts), orderBy).map(post =>
-    ({...post,
-      date: new Date(post.timestamp),
-      link:`/${post.category}/${post.id}` }))
+  orderPosts(filterPosts(posts), orderBy).map(post => (
+    {...post,
+      link:`/${post.category}/${post.id}`,
+      date: timestampToDate(post.timestamp)}
+    ))
 )
-
 
 const PostGrid = ({ posts, orderBy, votePost, deletePost }) => {
   return (

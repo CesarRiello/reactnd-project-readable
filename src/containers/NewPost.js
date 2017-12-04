@@ -24,10 +24,11 @@ class NewPost extends Component {
   }
 
   componentDidMount() {
+    // this.props.dispatch(categoriesActions.fetchCategories())
     this.props.dispatch(categoriesActions.fetchCategories())
-    if( this.props.match.params.id) {
-      this.props.dispatch(postsActions.fetchPost(this.props.match.params.id))
-    }
+    // if( this.props.match.params.id) {
+    //   this.props.dispatch(postsActions.fetchPost(this.props.match.params.id))
+    // }
     console.log("this.props", this.props)
   }
 
@@ -79,7 +80,7 @@ class NewPost extends Component {
     if (this.state.post.id) {
       this.props.dispatch(postsActions.putPost(this.state.post))
     } else {
-      this.props.dispatch(postsActions.postPost(this.state.post))
+      this.props.dispatch(postsActions.addPost(this.state.post))
       this.setState({ post: { ...initialPost } })
     }
   }
@@ -135,7 +136,7 @@ class NewPost extends Component {
               id="category"
               value={this.state.post.category}
             >
-              {((this.props.categories || {}).items || []).map(category => (
+              {(this.props.categories || []).map(category => (
                 <option value={category.path}>{category.name}</option>
               ))}
             </select>

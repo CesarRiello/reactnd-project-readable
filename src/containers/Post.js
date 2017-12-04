@@ -3,16 +3,14 @@ import { connect } from 'react-redux'
 import Comments from 'components/Comments'
 import { postsActions, commentsActions } from 'actions'
 import { Link } from 'react-router-dom'
+import { timestampToDate } from 'utils/date'
 
 import Header from 'components/Header'
 
 class Post extends Component {
   componentDidMount() {
     const id = ((this.props.match || {}).params || {}).id
-    console.log(id);
-
     this.props.dispatch(postsActions.fetchPost(id))
-    //this.props.postAction.fetchPost(this.props.match.params.id)
     this.props.dispatch(commentsActions.fetchComments(id))
   }
   componentWillReceiveProps(nextProps) {
@@ -21,10 +19,19 @@ class Post extends Component {
     }
   }
   render() {
-    const { title, body, author, category, timestamp, voteScore, comments, id } = this.props.post
-    const date = new Date(timestamp)
+    const {
+      author,
+      body,
+      category,
+      comments,
+      id,
+      title,
+      timestamp,
+      voteScore
+    } = this.props.post
+  
     return [
-      <Header key="header" />,
+      <Header key="header" categories={this.props.categories} />,
       <div className="container" key="post">
 
         <div className="blog-header">
@@ -37,23 +44,30 @@ class Post extends Component {
             <div className="blog-post">
 
               <p className="blog-post-meta">
-                {'calendar'} by {author}
+                Author: {author}  -
+                Date: {timestampToDate(timestamp)} -
+                Category: <span className="badge"> {category} </span>
               </p>
 
-              <p className="blog-post-meta">
-                Category: {category}
-              </p>
 
               {!!body && (<p className="post">{body}</p>)}
               <hr />
 
-              <div basic size='mini'>
-                <button icon={'like outline'} content={'Like'} onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}></button>
-                <button label={<label>{voteScore}</label>} onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} icon={'dislike outline'} content={'dislike'}></button>
+              <div basic size='mini'> ({voteScore})
+                <button onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}>
+                  👍
+                </button>
+                <button onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} >
+                  👎
+                </button>
               </div>
               <div basic size='mini'>
-                {<button as={Link} to={`/post/${id}`}><i name={'edit outline'} />Edit</button>}
-                <button onClick={() => { this.props.deletePost({ postId: id, category: this.props.match.params.category }) }}><i name={'trash outline'} />Delete</button>
+                {<button as={Link} to={`/post/${id}`}>
+                  ✍
+                 </button>}
+                 <button onClick={() => { this.props.deletePost({ postId: id, category: this.props.match.params.category }) }}>
+                  🗑
+                 </button>
               </div>
             </div>
           </div>
@@ -61,7 +75,8 @@ class Post extends Component {
     </div>,
 
     <div className="container" key="comments">
-      <Comments items={comments} parentId={id} />
+      {comments &&
+        <Comments items={comments} parentId={id} />}
     </div>
     ]
   }

@@ -6,6 +6,7 @@
   margin-bottom: 20px;
 }
 
+
 input:checked ~ .collapse,
 input:checked ~ .dropdown-menu {
   display: block;

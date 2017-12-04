@@ -4,8 +4,8 @@ export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const fetchCategories = () => {
   return dispatch => {
     getCategories().then(response => {
-      console.log('getCategories');
-      dispatch({ type: FETCH_CATEGORIES, payload: ((response.data || {}).categories || []) })
+      console.log('getCategories',response);
+      dispatch({ type: FETCH_CATEGORIES, categories: ((response.data || {}).categories || []) })
     })
   }
 }
