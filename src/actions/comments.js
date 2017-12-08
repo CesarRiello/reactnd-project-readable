@@ -46,9 +46,10 @@ export const voteComment = ({ id, vote }) => {
   }
 }
 
-export const _deleteComment = ({ id }) => {
+export const removeComment = (id) => {
   return dispatch => {
     deleteComment({ id }).then(response => {
+      console.log('removeComment', response);
       dispatch({ type: DELETE_COMMENT, comment: response.data })
     })
   }

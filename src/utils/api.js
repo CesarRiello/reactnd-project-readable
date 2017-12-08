@@ -56,9 +56,7 @@ const postVoteComment = ({ id, vote }) => {
 }
 
 const deleteComment = ({ id }) => {
-  return axios.delete(`/comments/${id}`).catch(function(error) {
-    console.log(error)
-  })
+  return axios.delete(`/comments/${id}`)
 }
 
 const putComment = ({ id = "", body = "" }) => {

@@ -52,20 +52,20 @@ class Post extends Component {
               {!!body && (<p className="post">{body}</p>)}
               <hr />
 
-              <div basic size='mini'> ({voteScore})
-                <button onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}>
-                  👍
+              <div className="button-group"> ({voteScore})
+                <button className="btn" onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}>
+                  <span role="img" aria-label="tumbs up">👍</span>
                 </button>
-                <button onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} >
-                  👎
+                <button className="btn" onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} >
+                  <span role="img" aria-label="tumbs down">👎</span>
                 </button>
               </div>
-              <div basic size='mini'>
-                {<button as={Link} to={`/post/${id}`}>
-                  ✍
-                 </button>}
-                 <button onClick={() => { this.props.deletePost({ postId: id, category: this.props.match.params.category }) }}>
-                  🗑
+              <div  className="button-group pull-right">
+                <Link className="btn" to={`/post/${id}`}>
+                  <span role="img" aria-label="edit">✍</span>
+                 </Link>
+                 <button className="btn" onClick={() => { this.props.removePost({ postId: id, category: this.props.match.params.category }) }}>
+                  <span role="img" aria-label="trash">🗑</span>
                  </button>
               </div>
             </div>
