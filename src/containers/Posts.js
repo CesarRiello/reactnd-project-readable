@@ -55,7 +55,6 @@ class Posts extends Component {
   }
 
   render() {
-    const { name } = this.props.match.params
     return [
       <Header key="header" categories={this.props.categories} />,
       <div className="container" key="container">

@@ -26,8 +26,8 @@ const putPost = data => {
   })
 }
 
-const deletePost = ({ postId }) => {
-  return axios.delete(`/posts/${postId}`).catch(function(error) {
+const deletePost = ( id ) => {
+  return axios.delete(`/posts/${id}`).catch(function(error) {
     console.log(error)
   })
 }
@@ -43,23 +43,23 @@ const postPost = ({ title, body, author, category }) => {
   })
 }
 
-const postVote = ({ id, rank }) => {
+const postVote = ( id, rank ) => {
   const option = rank === "downVote" ? "downVote" : "upVote"
   return axios.post(`/posts/${id}`, { option })
 }
 
 const getComments = id => axios.get(`/posts/${id}/comments`)
 
-const postVoteComment = ({ id, vote }) => {
-  const option = vote === "upVote" || vote === "downVote" ? vote : ""
+const postVoteComment = (id, rank) => {
+  const option = rank === "upVote" || rank === "downVote" ? rank : ""
   return axios.post(`/comments/${id}`, { option })
 }
 
-const deleteComment = ({ id }) => {
+const deleteComment = (id) => {
   return axios.delete(`/comments/${id}`)
 }
 
-const putComment = ({ id = "", body = "" }) => {
+const putComment = ({id = "", body = ""}) => {
   const data = {}
   data.body = body
   data.timestamp = Date.now()
@@ -68,7 +68,7 @@ const putComment = ({ id = "", body = "" }) => {
   })
 }
 
-const postComment = ({ body, author, parentId }) => {
+const postComment = ({body, author, parentId}) => {
   const timestamp = Date.now()
   const id = uuidv1()
 

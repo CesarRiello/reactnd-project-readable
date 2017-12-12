@@ -31,51 +31,54 @@ export const fetchPostsByCategory = category => {
   }
 }
 
-export const fetchPost = postId => {
-  if (postId) {
+export const fetchPost = id => {
+  if (id) {
     return dispatch => {
-      getPost(postId).then(response => {
+      getPost(id).then(response => {
         dispatch({ type: FETCH_POST, post: response.data })
       })
     }
   }
 }
 
-export const rankPost = ({ postId, vote }) => {
+export const rankPost = ( id, rank ) => {
   return dispatch => {
-    postVote({ postId, vote }).then(response => {
+    postVote( id, rank ).then(response => {
       dispatch({ type: VOTE_POST, post: response.data })
     })
   }
 }
 
-export const removePost = ({ postId, category = "" }) => {
+export const removePost = (id) => {
   return dispatch => {
-    deletePost({ postId }).then(response => {
+    deletePost(id).then(response => {
       dispatch({ type: DELETE_POST, post: response.data })
       alert("Post deleted")
     })
   }
 }
 
-export const addPost = post => {
+export const addPost = (post, history) => {
   if (post) {
     return dispatch => {
       postPost(post).then(response => {
         dispatch({ type: ADD_POST, post: response.data })
         alert("Post created")
+        history.push('/posts')
       })
     }
   }
 }
 
-export const editPost = (post, id) => {
-  if (post) {
-    post.id = id
+export const editPost = (post, history) => {
+  if (post && post.id) {
     return dispatch => {
-      putPost(post).then(response => {
-        dispatch({ type: EDIT_POST, post: response.data })
-        alert("Post edited")
+      const goTo = `/post/${post.id}`
+      putPost(post)
+        .then(response => {
+          dispatch({ type: EDIT_POST, post: response.data })
+          alert("Post edited")
+          history.push(goTo)
       })
     }
   }

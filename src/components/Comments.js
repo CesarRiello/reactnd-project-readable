@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { commentsActions } from '../actions'
 import { connect } from 'react-redux'
 import { timestampToDate } from 'utils/date'
+import { orderByKey } from 'utils/array'
 
 const initialComment = {
   id: null,
@@ -24,12 +25,12 @@ class Comments extends Component {
     let errors = {}
 
     if (!comment.author) {
-      const author = "the author is invalid"
+      const author = "the author name is invalid"
       errors = { ...errors, author }
     }
 
     if (!comment.body) {
-      const body = "the body is invalid"
+      const body = "the comment is invalid"
       errors = { ...errors, body }
     }
 
@@ -70,12 +71,15 @@ class Comments extends Component {
   }
 
   editComment = (comment) => {
-    this.setState({ edit: comment })
+    const _comment = {...comment, body: prompt(`author ${comment.author}`, comment.body)}
+    if (_comment.body) {
+      this.props.dispatch(commentsActions.editComment(_comment))
+    }
   }
 
   removeComment = (id) => {
     if (window.confirm("You realy want delete this comment")) {
-      this.props.dispatch(commentsActions.removeComment({ id }))
+      this.props.dispatch(commentsActions.removeComment(id))
     }
   }
 
@@ -97,49 +101,23 @@ class Comments extends Component {
           {comment.body}
         </div>
         <div className="panel-footer">
-          <button className="btn" onClick={() => { this.props.dispatch(commentsActions.voteComment({ id: comment.id, vote: 'upVote' })) }}>
+          <button className="btn" onClick={() => { this.props.dispatch(commentsActions.voteComment(comment.id, 'upVote')) }}>
             <span role="img" aria-label="tumbs up">👍</span>
           </button>
-          <button className="btn" onClick={() => { this.props.dispatch(commentsActions.voteComment({ id: comment.id, vote: 'downVote' })) }}>
+          <button className="btn" onClick={() => { this.props.dispatch(commentsActions.voteComment(comment.id, 'downVote')) }}>
             <span role="img" aria-label="tumbs down">👎</span>
           </button>
-          <button className="btn" onClick={() => { this.props.dispatch(commentsActions.editComment(comment)) }}>
+          <button className="btn" onClick={() => { this.editComment(comment) }}>
             <span role="img" aria-label="edit">✍</span>
           </button>
-          <button className="btn" value={comment.id} onClick={() => {
-            this.props.dispatch(commentsActions.removeComment(comment.id))
-           }}>
+          <button className="btn" onClick={() => {this.removeComment(comment.id)}}>
             <span role="img" aria-label="trash">🗑</span>
           </button>
         </div>
       </div>
   )
 
-  renderCommentForm = (comment) => (
-    <main key={comment.id}>
-      <div>
-        <p>
-          <i name="user" /> {comment.author}
-        </p>
-        <div>
-          <div><i name={'like outline'} /> {comment.voteScore} Likes</div>
-          <div>{new Date(comment.timestamp)}</div>
-        </div>
-        <form reply onSubmit={() => { this.handleEditComment(this.state.edit) }}>
-          <textarea required label="Comment" value={this.state.edit.body} onChange={(e) => { this.handleChange('edit', e.target.value) }} />
-          <button content='Save Comment' labelPosition='left' icon='edit' primary />
-        </form>
-        <div>
-          <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'upVote' }) }}><i name={'like outline'} />Like</button>
-          <button onClick={() => { this.props.voteComment({ id: comment.id, vote: 'downVote' }) }}><i name={'dislike outline'} />Dislike</button>
-          <button onClick={() => { this.editComment(comment) }}><i name={'edit outline'} />Edit</button>
-          <button onClick={() => { this.props.deleteComment({ id: comment.id }) }}><i name={'trash outline'} />Delete</button>
-        </div>
-      </div>
-    </main>
-  )
-
-  renderNewCommentForm = (postId) => (
+  renderCommentForm = (postId) => (
 
     <form key="form-new-comment" onSubmit={(event) => this.handleSubmit(event, postId)}>
 
@@ -185,21 +163,18 @@ class Comments extends Component {
   )
 
   render() {
-    const { items, parentId, commentId } = this.props
+    const { items, parentId } = this.props
     const comments = this.prepareComments(items)
     return (
       <div className="container">
         <div className="row">
           <h4>Comments</h4>
-          {comments.map(comment => {
-            if (commentId === comment.id) {
-              return this.renderCommentForm(comment)
-            }
+          {orderByKey(comments, 'voteScore').reverse().map(comment => {
             return this.renderComment(comment)
           })}
         </div>
         <div className="row">
-          {this.renderNewCommentForm(parentId)}
+          {this.renderCommentForm(parentId)}
         </div>
       </div>
     )

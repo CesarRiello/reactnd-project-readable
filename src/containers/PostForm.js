@@ -11,7 +11,7 @@ const initialPost = {
   body: ""
 }
 
-class NewPost extends Component {
+class PostForm extends Component {
   constructor() {
     super()
 
@@ -24,12 +24,23 @@ class NewPost extends Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch(categoriesActions.fetchCategories())
+    const id = ((this.props.match || {}).params || {}).id
+
     this.props.dispatch(categoriesActions.fetchCategories())
-    // if( this.props.match.params.id) {
-    //   this.props.dispatch(postsActions.fetchPost(this.props.match.params.id))
-    // }
-    console.log("this.props", this.props)
+    if (id) {
+      this.props.dispatch(postsActions.fetchPost(id))
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.post.id) {
+      this.setState({post: this.props.post})
+      return
+    }
+    if (nextProps.post.id !== this.props.post.id) {
+      const post = nextProps.post
+      this.setState({post})
+    }
   }
 
   hasErrorPostFields = post => {
@@ -78,7 +89,7 @@ class NewPost extends Component {
     }
 
     if (this.state.post.id) {
-      this.props.dispatch(postsActions.putPost(this.state.post))
+      this.props.dispatch(postsActions.editPost(this.state.post, this.props.history))
     } else {
       this.props.dispatch(postsActions.addPost(this.state.post))
       this.setState({ post: { ...initialPost } })
@@ -88,8 +99,8 @@ class NewPost extends Component {
   render() {
     return [
       <Header key="header" />,
-      <div className="container">
-        <form key="form-new-post" onSubmit={this.handleSubmit}>
+      <div className="container" key="form-new-post">
+        <form onSubmit={this.handleSubmit}>
 
           <div className={this.state.errors.title ? 'has-error form-group' : 'form-group'}>
             <label htmlFor="title" className="control-label">
@@ -137,7 +148,7 @@ class NewPost extends Component {
               value={this.state.post.category}
             >
               {(this.props.categories || []).map(category => (
-                <option value={category.path}>{category.name}</option>
+                <option key={category.path} value={category.path}>{category.name}</option>
               ))}
             </select>
             {this.state.errors.category &&
@@ -178,4 +189,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(NewPost)
+export default connect(mapStateToProps)(PostForm)

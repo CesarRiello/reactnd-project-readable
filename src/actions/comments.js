@@ -14,8 +14,9 @@ export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 export const editComment = (comment) => {
   return dispatch => {
-    putComment(comment).then(response => {
-      dispatch({ type: EDIT_COMMENT, comment: response.data })
+    putComment(comment)
+      .then(response => {
+        dispatch({ type: EDIT_COMMENT, comment: response.data })
     })
   }
 }
@@ -23,32 +24,35 @@ export const editComment = (comment) => {
 export const fetchComments = postId => {
   if (postId) {
     return dispatch => {
-      getComments(postId).then(response => {
-        dispatch({ type: FETCH_COMMENTS, comments: (response.data || []).sort(() => ('-voteScore')) })
-      })
+      getComments(postId)
+        .then(response => {
+          dispatch({ type: FETCH_COMMENTS, comments: (response.data || []).sort(() => ('-voteScore')) })
+        })
     }
   }
 }
 
 export const addComment = data => {
   return dispatch => {
-    postComment(data).then(response => {
-      dispatch({ type: ADD_COMMENT, comment: response.data })
+    postComment(data)
+      .then(response => {
+        dispatch({ type: ADD_COMMENT, comment: response.data })
     })
   }
 }
 
-export const voteComment = ({ id, vote }) => {
+export const voteComment = (id, rank) => {
   return dispatch => {
-    postVoteComment({ id, vote }).then(response => {
-      dispatch({ type: VOTE_COMMENT, comment: response.data })
-    })
+    postVoteComment(id, rank)
+      .then(response => {
+        dispatch({ type: VOTE_COMMENT, comment: response.data })
+      })
   }
 }
 
 export const removeComment = (id) => {
   return dispatch => {
-    deleteComment({ id }).then(response => {
+    deleteComment(id).then(response => {
       console.log('removeComment', response);
       dispatch({ type: DELETE_COMMENT, comment: response.data })
     })

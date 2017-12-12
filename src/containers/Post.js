@@ -10,14 +10,17 @@ import Header from 'components/Header'
 class Post extends Component {
   componentDidMount() {
     const id = ((this.props.match || {}).params || {}).id
-    this.props.dispatch(postsActions.fetchPost(id))
-    this.props.dispatch(commentsActions.fetchComments(id))
-  }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.id !== this.props.match.params.id) {
-      this.props.postAction.fetchPost(nextProps.match.params.id)
+    if(id) {
+      this.props.dispatch(postsActions.fetchPost(id))
+      this.props.dispatch(commentsActions.fetchComments(id))
     }
   }
+
+  removePost = (id) => {
+    if (window.confirm("You realy want delete this post"))
+    this.props.dispatch(postsActions.removePost(id))
+  }
+
   render() {
     const {
       author,
@@ -52,19 +55,23 @@ class Post extends Component {
               {!!body && (<p className="post">{body}</p>)}
               <hr />
 
-              <div className="button-group"> ({voteScore})
-                <button className="btn" onClick={() => { this.props.votePost({ id: id, vote: 'upVote' }) }}>
+              <div className="button-group"> Rank: ({voteScore})
+                <button className="btn" onClick={() => {
+                  this.props.dispatch(postsActions.rankPost( id, 'upVote'))
+                }}>
                   <span role="img" aria-label="tumbs up">👍</span>
                 </button>
-                <button className="btn" onClick={() => { this.props.votePost({ id: id, vote: 'downVote' }) }} >
+                <button className="btn" onClick={() => {
+                  this.props.dispatch(postsActions.rankPost( id, 'downVote'))
+                }}>
                   <span role="img" aria-label="tumbs down">👎</span>
                 </button>
               </div>
               <div  className="button-group pull-right">
-                <Link className="btn" to={`/post/${id}`}>
+                <Link className="btn" to={`/post/edit/${id}`}>
                   <span role="img" aria-label="edit">✍</span>
                  </Link>
-                 <button className="btn" onClick={() => { this.props.removePost({ postId: id, category: this.props.match.params.category }) }}>
+                 <button className="btn" onClick={() => { this.removePost(id) }}>
                   <span role="img" aria-label="trash">🗑</span>
                  </button>
               </div>
