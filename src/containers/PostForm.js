@@ -91,7 +91,7 @@ class PostForm extends Component {
     if (this.state.post.id) {
       this.props.dispatch(postsActions.editPost(this.state.post, this.props.history))
     } else {
-      this.props.dispatch(postsActions.addPost(this.state.post))
+      this.props.dispatch(postsActions.addPost(this.state.post, this.props.history))
       this.setState({ post: { ...initialPost } })
     }
   }

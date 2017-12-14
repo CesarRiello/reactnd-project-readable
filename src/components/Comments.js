@@ -117,9 +117,9 @@ class Comments extends Component {
       </div>
   )
 
-  renderCommentForm = (postId) => (
+  renderCommentForm = (id) => (
 
-    <form key="form-new-comment" onSubmit={(event) => this.handleSubmit(event, postId)}>
+    <form key="form-new-comment" onSubmit={(event) => this.handleSubmit(event, id)}>
 
       <div className={this.state.errors.author ? 'has-error form-group' : 'form-group'}>
         <label htmlFor="author" className="control-label">

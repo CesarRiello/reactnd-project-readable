@@ -64,7 +64,7 @@ export const addPost = (post, history) => {
       postPost(post).then(response => {
         dispatch({ type: ADD_POST, post: response.data })
         alert("Post created")
-        history.push('/posts')
+        history.push('/')
       })
     }
   }

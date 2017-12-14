@@ -11,3 +11,8 @@ input:checked ~ .collapse,
 input:checked ~ .dropdown-menu {
   display: block;
 }
+
+.selected,
+.dropdown-menu > li > a.selected {
+  font-weight: bold;
+}

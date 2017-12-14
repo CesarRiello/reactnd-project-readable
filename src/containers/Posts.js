@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PostGrid from '../components/PostGrid'
+import PostGrid from 'components/PostGrid'
 import { postsActions, categoriesActions } from '../actions'
 import { Link } from 'react-router-dom'
+import { orderByKey } from 'utils/array'
 
 import Header from 'components/Header'
 
@@ -21,29 +22,35 @@ class Posts extends Component {
     this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
     this.props.dispatch(categoriesActions.fetchCategories())
   }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.match.params.category !== this.props.match.params.category) {
+  //     this.props.postsActions.fetchPostsByCategory(nextProps.match.params.category, this.state.postsOrderBy)
+  //   }
+  // }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.category !== this.props.match.params.category) {
-      this.props.postsActions.fetchPostsByCategory(nextProps.match.params.category, this.state.postsOrderBy)
-    }
+componentWillReceiveProps(nextProps) {
+  console.log(this.props.match.params);
+  const category = ((this.props.match || {}).params || {}).category
+  if (category) {
+    this.props.dispatch(postsActions.fetchPostsByCategory(category, this.state.postsOrderBy))
+  } else {
+    this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
   }
+  this.props.dispatch(categoriesActions.fetchCategories())
+}
 
   orderPosts = (orderBy) => {
     if (orderBy === this.state.postsOrderBy)
       return
 
+    this.setState({postsOrderBy: orderBy})
+
     const direction = ((orderBy || '').indexOf('-') === 0) ? -1 : 1
     const key = (orderBy || '').replace('-', '')
 
-    const orderedPost = [...this.props.posts].sort((current, next) => {
-        if (current[key] < next[key])
-         return -1 * direction;
 
-        if (current[key] > next[key])
-         return 1 * direction;
-
-        return 0;
-      })
+    const orderedPost = orderByKey(this.props.posts, key, direction)
 
     this.props.dispatch(({ type: postsActions.FETCH_POSTS, posts: orderedPost }))
   }
@@ -55,6 +62,7 @@ class Posts extends Component {
   }
 
   render() {
+    const selectedCategory = ((this.props.match || {}).params || {}).category
     return [
       <Header key="header" categories={this.props.categories} />,
       <div className="container" key="container">
@@ -72,11 +80,19 @@ class Posts extends Component {
                   {this.state.orderOption
                     .map(order => (
                     <li key={order.label}>
-                      <button href="#" className="btn-link" value={order.value} onClick={event => { this.updateForm('postsOrderBy', event.target.value) }} >
-                        {order.label}
-                      </button>
+
+                      <label
+                        htmlFor="toggleOrder"
+                        onClick={() => { this.orderPosts(order.value) }}
+                        className={`btn btn-link ${this.state.postsOrderBy === order.value ? 'selected' : ''}`}
+                        >
+                        <span>{order.label}</span>
+                      </label>
+
                     </li>
                   ))}
+
+
                 </ul>
               </div>
 
@@ -90,11 +106,21 @@ class Posts extends Component {
                   {(this.props.categories || [])
                     .map(category =>
                       <li key={category.path}>
-                        <a href={`/${category.path}`} className="btn-link" alt={`/${category.name}`}>
+                        <a
+                          href={`/${category.path}`}
+                          className={`link ${selectedCategory === category.path ? 'selected' : ''}`}
+                          alt={`/${category.name}`}>
                           {category.name}
                         </a>
                     </li>
                   )}
+
+                  {selectedCategory && <li key="none">
+                  <a
+                    className="link"
+                    href="/"
+                    >See all</a>
+                  </li>}
                 </ul>
               </div>
 
@@ -105,7 +131,9 @@ class Posts extends Component {
 
         <PostGrid
           posts={this.props.posts}
-          postsOrderBy={this.state.postsOrderBy} />
+          postsOrderBy={this.state.postsOrderBy}
+          selectedCategory={selectedCategory}
+         />
       </div>
     ]
   }
