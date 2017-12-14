@@ -19,26 +19,23 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+    // this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
     this.props.dispatch(categoriesActions.fetchCategories())
   }
-  //
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.match.params.category !== this.props.match.params.category) {
-  //     this.props.postsActions.fetchPostsByCategory(nextProps.match.params.category, this.state.postsOrderBy)
-  //   }
-  // }
 
-componentWillReceiveProps(nextProps) {
-  console.log(this.props.match.params);
-  const category = ((this.props.match || {}).params || {}).category
-  if (category) {
-    this.props.dispatch(postsActions.fetchPostsByCategory(category, this.state.postsOrderBy))
-  } else {
-    this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+  componentWillReceiveProps(nextProps) {
+    const category = ((this.props.match || {}).params || {}).category
+    const nextCategory = ((nextProps.match || {}).params || {}).category
+
+    console.log(nextCategory);
+    if (category) {
+      if (nextCategory !== category) {
+        this.props.dispatch(postsActions.fetchPostsByCategory(nextCategory, this.state.postsOrderBy))
+      }
+    } else {
+      this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+    }
   }
-  this.props.dispatch(categoriesActions.fetchCategories())
-}
 
   orderPosts = (orderBy) => {
     if (orderBy === this.state.postsOrderBy)
@@ -53,12 +50,6 @@ componentWillReceiveProps(nextProps) {
     const orderedPost = orderByKey(this.props.posts, key, direction)
 
     this.props.dispatch(({ type: postsActions.FETCH_POSTS, posts: orderedPost }))
-  }
-
-  updateForm = (field, value) => {
-    this.setState((state) => {
-      return { ...state, [field]: value }
-    })
   }
 
   render() {
