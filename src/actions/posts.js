@@ -49,36 +49,35 @@ export const rankPost = ( id, rank ) => {
   }
 }
 
-export const removePost = (id) => {
+export const removePost = (id, handleSuccess) => {
   return dispatch => {
     deletePost(id).then(response => {
       dispatch({ type: DELETE_POST, post: response.data })
-      alert("Post deleted")
+      handleSuccess('Post deleted')
     })
   }
 }
 
-export const addPost = (post, history) => {
+export const addPost = (post, handleSuccess) => {
   if (post) {
     return dispatch => {
-      postPost(post).then(response => {
-        dispatch({ type: ADD_POST, post: response.data })
-        alert("Post created")
-        history.push('/')
-      })
+      postPost(post)
+        .then(response => {
+          dispatch({ type: ADD_POST, post: response.data })
+          handleSuccess('Post created', '/')
+        })
     }
   }
 }
 
-export const editPost = (post, history) => {
+export const editPost = (post, handleSuccess) => {
   if (post && post.id) {
     return dispatch => {
       const goTo = `/post/${post.id}`
       putPost(post)
         .then(response => {
           dispatch({ type: EDIT_POST, post: response.data })
-          alert("Post edited")
-          history.push(goTo)
+          handleSuccess('Post edited', goTo)
       })
     }
   }

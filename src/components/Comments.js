@@ -168,7 +168,7 @@ class Comments extends Component {
     return (
       <div className="container">
         <div className="row">
-          <h4>Comments</h4>
+          <h4>Comments ({(comments || []).length})</h4>
           {orderByKey(comments, 'voteScore').reverse().map(comment => {
             return this.renderComment(comment)
           })}

@@ -81,6 +81,17 @@ class PostForm extends Component {
     this.setState({post})
   }
 
+
+  handleSuccess = (message = '', path = null) => {
+
+    if(message)
+      alert(message)
+
+    if(path)
+      this.props.history.push(path)
+
+  }
+
   handleSubmit = (e, message) => {
     e.preventDefault()
 
@@ -89,9 +100,9 @@ class PostForm extends Component {
     }
 
     if (this.state.post.id) {
-      this.props.dispatch(postsActions.editPost(this.state.post, this.props.history))
+      this.props.dispatch(postsActions.editPost(this.state.post, this.handleSuccess))
     } else {
-      this.props.dispatch(postsActions.addPost(this.state.post, this.props.history))
+      this.props.dispatch(postsActions.addPost(this.state.post, this.handleSuccess))
       this.setState({ post: { ...initialPost } })
     }
   }

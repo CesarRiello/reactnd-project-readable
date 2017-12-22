@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { postsActions } from '../actions'
 import { Link } from 'react-router-dom'
 import { timestampToDate } from 'utils/date'
 
@@ -18,7 +17,12 @@ const preparePosts = (posts, orderBy) => (
     ))
 )
 
-const PostGrid = ({ posts, orderBy, votePost, deletePost }) => {
+const removePost = (id, callback) => {
+  if (window.confirm("You realy want delete this post"))
+  callback(id)
+}
+
+const PostGrid = ({ posts, orderBy, votePost, deletePost, rankPost }) => {
   return (
     <div className="row">
       {preparePosts(posts, orderBy).map(post => (
@@ -32,8 +36,29 @@ const PostGrid = ({ posts, orderBy, votePost, deletePost }) => {
               </Link>
               <p>Category: <span className="label label-default">{post.category}</span> </p>
               <p>Date: {post.date}</p>
-              <p>Rank: {post.voteScore}</p>
               <p>Author: {post.author}</p>
+
+              <hr />
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="button-group pull-left"> Rank: ({post.voteScore})
+                    <button className="btn" onClick={() => { rankPost( post.id, 'upVote') }}>
+                      <span role="img" aria-label="tumbs up">👍</span>
+                    </button>
+                    <button className="btn" onClick={() => { rankPost( post.id, 'downVote') }}>
+                      <span role="img" aria-label="tumbs down">👎</span>
+                    </button>
+                  </div>
+                  <div  className="button-group pull-right">
+                    <Link className="btn" to={`/post/edit/${post.id}`}>
+                      <span role="img" aria-label="edit">✍</span>
+                    </Link>
+                    <button className="btn" onClick={() => { removePost(post.id, deletePost) }}>
+                      <span role="img" aria-label="trash">🗑</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -48,15 +73,4 @@ const mapStateToProps = state => {
   return {}
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    votePost: ({ id, vote }) => {
-      dispatch(postsActions.votePost({ postId: id, vote }))
-    },
-    deletePost: ({ postId }) => {
-      dispatch(postsActions.deletePost({ postId }))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostGrid)
+export default connect(mapStateToProps)(PostGrid)
