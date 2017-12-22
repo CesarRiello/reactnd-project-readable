@@ -7,6 +7,15 @@ Second part of React Nanodegree Program of Udacity (Redux)
 ### Prerequisites
 To run this project you need nodejs and npm.
 
+### Get and start the back-end
+
+```
+git clone git@github.com:udacity/reactnd-project-readable-starter.git
+cd ./reactnd-project-readable-starter/api-server
+npm i
+npm start
+```
+
 ### Installing
 
 ```
@@ -21,7 +30,7 @@ npm start
 
 ## Authors
 
-* **Cesar Riello**
+***Cesar Riello**
 
 ## License
 
