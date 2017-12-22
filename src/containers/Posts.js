@@ -19,21 +19,31 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    // this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
     this.props.dispatch(categoriesActions.fetchCategories())
+
+    const category = ((this.props.match || {}).params || {}).category
+    if (category) {
+        this.props.dispatch(postsActions.fetchPostsByCategory(category, this.state.postsOrderBy))
+    } else {
+      this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+    }
+
+  }
+
+  handleSuccess = (message = '', path = null) => {
+    if(message)
+      alert(message)
+    if(path)
+      this.props.history.push(path)
+
   }
 
   componentWillReceiveProps(nextProps) {
     const category = ((this.props.match || {}).params || {}).category
     const nextCategory = ((nextProps.match || {}).params || {}).category
 
-    console.log(nextCategory);
-    if (category) {
-      if (nextCategory !== category) {
-        this.props.dispatch(postsActions.fetchPostsByCategory(nextCategory, this.state.postsOrderBy))
-      }
-    } else {
-      this.props.dispatch(postsActions.fetchPosts(this.state.postsOrderBy))
+    if (nextCategory && nextCategory !== category) {
+      this.props.dispatch(postsActions.fetchPostsByCategory(nextCategory, this.state.postsOrderBy))
     }
   }
 
@@ -134,7 +144,6 @@ class Posts extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('state', state);
   return {
     categories: state.categories,
     posts: state.posts,

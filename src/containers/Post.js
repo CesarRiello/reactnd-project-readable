@@ -16,7 +16,7 @@ class Post extends Component {
     }
   }
 
-  removePost = (id) => {
+  confirmRemovePost = (id) => {
     if (window.confirm("You realy want delete this post"))
       this.props.dispatch(postsActions.removePost(id, (message) => {alert(message)}))
   }
@@ -72,7 +72,7 @@ class Post extends Component {
                     <Link className="btn" to={`/post/edit/${id}`}>
                       <span role="img" aria-label="edit">✍</span>
                     </Link>
-                    <button className="btn" onClick={() => { this.removePost(id) }}>
+                    <button className="btn" onClick={() => { this.confirmRemovePost(id) }}>
                       <span role="img" aria-label="trash">🗑</span>
                     </button>
                   </div>

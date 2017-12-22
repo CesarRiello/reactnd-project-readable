@@ -50,10 +50,11 @@ export const rankPost = ( id, rank ) => {
 }
 
 export const removePost = (id, handleSuccess) => {
+  console.log(handleSuccess)
   return dispatch => {
     deletePost(id).then(response => {
       dispatch({ type: DELETE_POST, post: response.data })
-      handleSuccess('Post deleted')
+      handleSuccess('Post deleted', '/')
     })
   }
 }

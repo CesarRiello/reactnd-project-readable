@@ -10,7 +10,6 @@ const getCategories = () => axios.get(`categories`)
 const getPost = id => axios.get(`/posts/${id}`)
 
 const getPosts = () => {
-  console.log('rst getPosts');
   return axios.get("/posts")
 }
 

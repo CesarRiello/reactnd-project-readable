@@ -17,9 +17,9 @@ const preparePosts = (posts, orderBy) => (
     ))
 )
 
-const removePost = (id, callback) => {
-  if (window.confirm("You realy want delete this post"))
-  callback(id)
+const confirmRemovePost = (id, callback) => {
+  if (window.confirm("You realy want delete this"))
+    callback(id, (message) => {alert(message)})
 }
 
 const PostGrid = ({ posts, orderBy, votePost, deletePost, rankPost }) => {
@@ -53,7 +53,7 @@ const PostGrid = ({ posts, orderBy, votePost, deletePost, rankPost }) => {
                     <Link className="btn" to={`/post/edit/${post.id}`}>
                       <span role="img" aria-label="edit">✍</span>
                     </Link>
-                    <button className="btn" onClick={() => { removePost(post.id, deletePost) }}>
+                    <button className="btn" onClick={() => { confirmRemovePost(post.id, deletePost) }}>
                       <span role="img" aria-label="trash">🗑</span>
                     </button>
                   </div>

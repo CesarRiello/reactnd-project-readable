@@ -53,7 +53,6 @@ export const voteComment = (id, rank) => {
 export const removeComment = (id) => {
   return dispatch => {
     deleteComment(id).then(response => {
-      console.log('removeComment', response);
       dispatch({ type: DELETE_COMMENT, comment: response.data })
     })
   }
