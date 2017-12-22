@@ -158,6 +158,7 @@ class PostForm extends Component {
               id="category"
               value={this.state.post.category}
             >
+              <option value=""></option>
               {(this.props.categories || []).map(category => (
                 <option key={category.path} value={category.path}>{category.name}</option>
               ))}

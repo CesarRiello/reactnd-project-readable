@@ -134,7 +134,7 @@ class Posts extends Component {
           posts={this.props.posts}
           postsOrderBy={this.state.postsOrderBy}
           selectedCategory={selectedCategory}
-          deletePost={(id) => this.props.dispatch(postsActions.removePost(id))}
+          deletePost={(id) => this.props.dispatch(postsActions.removePost(id, ()=>{}))}
           rankPost={(id, vote) => this.props.dispatch(postsActions.rankPost( id, vote))}
          />
 

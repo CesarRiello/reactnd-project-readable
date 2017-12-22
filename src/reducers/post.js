@@ -11,12 +11,21 @@ const {
   FETCH_POST,
   VOTE_POST,
   DELETE_POST,
+  POST_NOT_FOUND
 } = postsActions
 
 const post = (state = {}, action = '') => {
   switch (action.type) {
     case FETCH_POST:
-      return { ...action.post }
+      return {
+        ...action.post,
+        postNotFount: false
+      }
+      case POST_NOT_FOUND:
+      return {
+        ...state,
+        postNotFount: true
+      }
     case FETCH_COMMENTS:
       return {
         ...state,

@@ -14,6 +14,7 @@ export const VOTE_POST = "VOTE_POST"
 export const FETCH_POST = "FETCH_POST"
 export const EDIT_POST = "EDIT_POST"
 export const DELETE_POST = "DELETE_POST"
+export const POST_NOT_FOUND = "POST_NOT_FOUND"
 
 export const fetchPosts = () => {
   return dispatch => {
@@ -35,7 +36,13 @@ export const fetchPost = id => {
   if (id) {
     return dispatch => {
       getPost(id).then(response => {
-        dispatch({ type: FETCH_POST, post: response.data })
+        if(Object.keys(response.data).length) {
+          dispatch({ type: FETCH_POST, post: response.data })
+        } else {
+          dispatch({ type: POST_NOT_FOUND, post: null })
+        }
+      }).catch(error => {
+        dispatch({ type: POST_NOT_FOUND, post: null })
       })
     }
   }
